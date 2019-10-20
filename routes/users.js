@@ -3,15 +3,21 @@ var router = express.Router();
 
 require('dotenv').config()
 
-var mysql = require('mysql');
-var db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASES,
-  port: process.env.DB_PORT,
-  socketPath: `/cloudsql/${process.env.CLOUD_SQL_CONNECTION_NAME}`,
-})
+const mysql = require('promise-mysql');
+
+let pool;
+const db = async () => {
+  pool = await  mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASES,
+    port: process.env.DB_PORT,
+    socketPath: `/cloudsql/brijqtify:asia-southeast1:nodejs`,
+  })
+};
+
+db();
 
 // Creation of Teacher_Student
 router.post('/linker', function (req, res) {

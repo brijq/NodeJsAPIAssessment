@@ -3,15 +3,21 @@ var router = express.Router();
 
 require('dotenv').config()
 
-var mysql = require('mysql');
-var db = mysql.createConnection({
+const mysql = require('promise-mysql');
+
+let pool;
+const createPool = async () => {
+  pool = await  mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASES,
     port: process.env.DB_PORT,
-    socketPath: `/cloudsql/${process.env.CLOUD_SQL_CONNECTION_NAME}`,
-})
+    socketPath: `/cloudsql/brijqtify:asia-southeast1:nodejs`,
+  })
+};
+
+createPool();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -19,10 +25,10 @@ router.get('/', function(req, res, next) {
 });
 
 router.get ('/testconnect', function(req, res, next) {
-  if( db != null){
+  if( pool != null){
     res.send('connect success')
   } else {
-      res.send('failed')
+    res.send('failed')
   }
 });
 
