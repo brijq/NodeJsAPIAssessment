@@ -3,28 +3,15 @@ var router = express.Router();
 
 require('dotenv').config()
 
-const mysql = require('promise-mysql');
-let pool;
-const db = async () => {
-  pool = await  mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASES,
-    port: process.env.DB_PORT,
-    socketPath: `/cloudsql/brijqtify:asia-southeast1:nodejs`,
-  })
-};
+var sqlConnection = require('../config')
 
-db();
-
-// Add a new Student
+/* Add New Student*/
 router.post('/student', function (req, res) {
   
     var student = req.body
-    pool.connect();
+    sqlConnection.connect();
                             
-    pool.query('INSERT INTO Students SET ?', student , function (error, results, fields) {
+    sqlConnection.query('INSERT INTO Students SET ?', student , function (error, results, fields) {
         if (error) throw error;
         return res.send({ error: false, data: results, message: 'New Student has been created successfully.' });
     });

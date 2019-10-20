@@ -3,48 +3,33 @@ var router = express.Router();
 
 require('dotenv').config()
 
-const mysql = require('promise-mysql');
+var sqlConnection = require('../config')
 
-let pool;
-const db = async () => {
-  pool = await  mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASES,
-    port: process.env.DB_PORT,
-    socketPath: `/cloudsql/brijqtify:asia-southeast1:nodejs`,
-  })
-};
-
-db();
-
-// Creation of Teacher_Student
+/* Add New Relationship between Teacher and Student in Teacher_Student RelationShip Table */
 router.post('/linker', function (req, res) {
-
   var linker = req.body
 
-  db.query('INSERT INTO Teachers_Students SET ?', linker, function (error, results, fields) {
+  sqlConnection.query('INSERT INTO Teachers_Students SET ?', linker, function (error, results, fields) {
     if (error) throw error;
     return res.send({ error: false, data: results, message: 'Success' });
   });
 });
 
-// Part 1 As a teacher, I want to register one or more students to a specified teacher.
+/* Part 1 As a teacher, I want to register one or more students to a specified teacher. */
 router.post('/api/request', function (req, res) {
 
   var teachersEmail = req.body.teacheremail;
-  console.log(teachersEmail)
+  //console.log(teachersEmail)
 
   var query = "SELECT T.*, S.* FROM Teachers_Students as T_S JOIN Teachers as T ON T_S.teacherid = T.id JOIN Students as S ON T_S.studentid = S.id WHERE T.email= '" + teachersEmail + "' ";
 
-  db.query(query, function (error, results, fields) {
+  sqlConnection.query(query, function (error, results, fields) {
     if (error) throw error;
     return res.send({ error: false, teacher: teachersEmail, student: results, message: 'Success' });
   });
 });
 
-//Part 2  As a teacher, I want to retrieve a list of students common to a given list of teachers (i.e. retrieve students who are registered to ALL of the given teachers).
+/* Part 2  As a teacher, I want to retrieve a list of students common to a given list of teachers (i.e. retrieve students who are registered to ALL of the given teachers). */
 router.get('/api/commonstudents', function (req, res) {
 
   var teachersEmail = req.query.teacher;
@@ -54,14 +39,14 @@ router.get('/api/commonstudents', function (req, res) {
     var query = "SELECT T.*, S.* FROM Teachers_Students as T_S JOIN Teachers as T ON T_S.teacherid = T.id JOIN Students as S ON T_S.studentid = S.id WHERE T.email= '" + teachersEmail[0] + "' & '" + teachersEmail[i] + "'  ";
     console.log(query)
   }
-  db.query(query, function (error, results, fields) {
+  sqlConnection.query(query, function (error, results, fields) {
     if (error) throw error;
     return res.send({ error: false, student: results, message: 'Success' });
   });
 });
 
 
-// Part 3 As a teacher, I want to suspend a specified student.
+/* Part 3 As a teacher, I want to suspend a specified student. */
 router.post('/api/suspend', function (req, res) {
   // Getting request
   var studentEmail = req.body.student;
@@ -70,7 +55,7 @@ router.post('/api/suspend', function (req, res) {
   var query2 = "UPDATE Students SET suspended = 'Yes' WHERE email = '" + studentEmail + "' ";
   console.log(query2)
 
-  db.query(query, function (error, results, fields) {
+  sqlConnection.query(query, function (error, results, fields) {
     res.setHeader('Content-Type', 'application/json');
     res.statusCode = 204;
     if (error) throw error;
@@ -78,13 +63,13 @@ router.post('/api/suspend', function (req, res) {
       response.end();
     }
     res.send({ error: false, message: 'Student Successfully Suspended' });
-    db.query(query2, function (req, res) {
+    sqlConnection.query(query2, function (req, res) {
       res.statusCode = 204;
     })
   });
 });
 
-// Part 4 As a teacher, I want to retrieve a list of students who can receive a given notification.
+/* Part 4 As a teacher, I want to retrieve a list of students who can receive a given notification. */
 router.post('/api/retrievefornotifications', function (req, res) {
   // Getting request
   var teachersEmail = req.body.teacher;
@@ -97,9 +82,8 @@ router.post('/api/retrievefornotifications', function (req, res) {
     * Check for students only if they are being registered with the teacher
   */
   var queryToCheckRegisteredWithTeacherandNotSuspended = "SELECT T.*, S.* FROM Teachers_Students as T_S JOIN Teachers as T ON T_S.teacherid = T.id JOIN Students as S ON T_S.studentid = S.id WHERE T.email= '" + teachersEmail + "' AND S.suspended = 'No' AND S.email = '" + extractStart[0] + "' AND '" + extractStart[1] + "'  ";
-  console.log(queryToCheckRegisteredWithTeacherandNotSuspended)
 
-  db.query(queryToCheckRegisteredWithTeacherandNotSuspended, function (error, results, fields) {
+  sqlConnection.query(queryToCheckRegisteredWithTeacherandNotSuspended, function (error, results, fields) {
     if (error) throw error;
     res.send({ error: false, students: results });
   });
