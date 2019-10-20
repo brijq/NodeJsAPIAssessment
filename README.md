@@ -3,6 +3,14 @@
 ## Background
 Teachers need a system where they can perform administrative functions for their students. Teachers and students are identified by their email addresses.
 
+## Prerequistes
+### If you are running via Local Machine Method
+1. Please ignore app.yaml as this file is meant for Google Cloud App Engine Deploy File 
+
+2. Please ignore Dockerfile and .dockerignore as this file is meant for Google Cloud Cloud Run Deploy File
+
+3. Please ignore .gcloudignore file as this file is meant for Google Cloud version of .gitignore file
+
 ## Before You Begin (Important)
 The following SQL Database is hosted in Google Cloud Platform using CloudSQL.
 
