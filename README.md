@@ -58,7 +58,7 @@ The following SQL Database is hosted in Google Cloud Platform using CloudSQL.
 1. Just navigate to https://brijqtify.appspot.com
 
 2. The following apis do just replace http://localhost:3000 to https://brijqtify.appspot.com
-* E.g. http://localhost:3000/students/student to https://brijqtify.appspot.com/students/student
+   * E.g. http://localhost:3000/students/student to https://brijqtify.appspot.com/students/student
 
 
 ### Local Machine Method ( Second Method )
