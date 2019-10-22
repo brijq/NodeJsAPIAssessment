@@ -11,6 +11,8 @@ Teachers need a system where they can perform administrative functions for their
 
 3. Please ignore .gcloudignore file as this file is meant for Google Cloud version of .gitignore file
 
+4. Please remember to include in Headers [{"key":"Content-Type","value":"application/json","description":""}] when perform Post APIS
+
 ## Before You Begin (Important)
 The following SQL Database is hosted in Google Cloud Platform using CloudSQL.
 

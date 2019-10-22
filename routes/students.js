@@ -12,6 +12,7 @@ router.post('/student', function (req, res) {
     sqlConnection.connect();
                             
     sqlConnection.query('INSERT INTO Students SET ?', student , function (error, results, fields) {
+        res.setHeader('Content-Type', 'application/json');
         if (error) {
             res.send({ error: true, message: error });
         } else {

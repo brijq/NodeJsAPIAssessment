@@ -10,6 +10,7 @@ router.post('/linker', function (req, res) {
   var linker = req.body
 
   sqlConnection.query('INSERT INTO Teachers_Students SET ?', linker, function (error, results, fields) {
+    res.setHeader('Content-Type', 'application/json');
     if (error) {
       res.send({ error: true, message: error });
     } else {
@@ -20,13 +21,12 @@ router.post('/linker', function (req, res) {
 
 /* Part 1 As a teacher, I want to register one or more students to a specified teacher. */
 router.post('/api/request', function (req, res) {
-
   var teachersEmail = req.body.teacheremail;
-  //console.log(teachersEmail)
 
   var query = "SELECT T.*, S.* FROM Teachers_Students as T_S JOIN Teachers as T ON T_S.teacherid = T.id JOIN Students as S ON T_S.studentid = S.id WHERE T.email= '" + teachersEmail + "' ";
 
   sqlConnection.query(query, function (error, results, fields) {
+    res.setHeader('Content-Type', 'application/json');
     if (error) {
       res.send({ error: true, message: error });
     } else {
@@ -37,8 +37,8 @@ router.post('/api/request', function (req, res) {
 
 /* Part 2  As a teacher, I want to retrieve a list of students common to a given list of teachers (i.e. retrieve students who are registered to ALL of the given teachers). */
 router.get('/api/commonstudents', function (req, res) {
-
   var teachersEmail = req.query.teacher;
+  
   var i;
   for (i = 0; i < teachersEmail.length; i++) {
     console.log(teachersEmail[i])
@@ -46,6 +46,7 @@ router.get('/api/commonstudents', function (req, res) {
     console.log(query)
   }
   sqlConnection.query(query, function (error, results, fields) {
+    res.setHeader('Content-Type', 'application/json');
     if (error) {
       res.send({ error: true, message: error });
     } else {
@@ -97,6 +98,7 @@ router.post('/api/retrievefornotifications', function (req, res) {
   var queryToCheckRegisteredWithTeacherandNotSuspended = "SELECT T.*, S.* FROM Teachers_Students as T_S JOIN Teachers as T ON T_S.teacherid = T.id JOIN Students as S ON T_S.studentid = S.id WHERE T.email= '" + teachersEmail + "' AND S.suspended = 'No' AND S.email = '" + extractStart[0] + "' AND '" + extractStart[1] + "'  ";
 
   sqlConnection.query(queryToCheckRegisteredWithTeacherandNotSuspended, function (error, results, fields) {
+    res.setHeader('Content-Type', 'application/json');
     if (error) {
       res.send({ error: true, message: error });
     } else {

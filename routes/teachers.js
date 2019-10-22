@@ -11,6 +11,7 @@ router.post('/teacher', function (req, res) {
     var teacher = req.body
                                 
     sqlConnection.query('INSERT INTO Teachers SET ?', teacher , function (error, results, fields) {
+        res.setHeader('Content-Type', 'application/json');
         if (error) {
             res.send({ error: true, message: error });
         } else {

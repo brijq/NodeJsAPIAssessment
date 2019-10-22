@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
 
 /* Test Connection From Database */
 router.get('/testconnect', function(req, res, next) {
-  if( sqlConnection != null){
+  if(sqlConnection != null){
     res.send('connect success')
   } else {
     res.send('failed')
