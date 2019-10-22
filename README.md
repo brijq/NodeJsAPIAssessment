@@ -13,6 +13,10 @@ Teachers need a system where they can perform administrative functions for their
 
 4. Please remember to include in Headers [{"key":"Content-Type","value":"application/json","description":""}] when perform Post APIS
 
+5. Please run API GET /testconnect to check for databases connection 
+
+6. Default page API will be GET / where you will see the home page of this API Assessment
+
 ## Before You Begin (Important)
 The following SQL Database is hosted in Google Cloud Platform using CloudSQL.
 
