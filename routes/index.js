@@ -7,7 +7,7 @@ var sqlConnection = require('../config')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Welcome to Node Js API Assessment' });
+  res.render('index', { title: 'Welcome to Node Js API Assessment by Brian Oh' });
 });
 
 /* Test Connection From Database */

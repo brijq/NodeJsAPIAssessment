@@ -12,8 +12,11 @@ router.post('/student', function (req, res) {
     sqlConnection.connect();
                             
     sqlConnection.query('INSERT INTO Students SET ?', student , function (error, results, fields) {
-        if (error) throw error;
-        return res.send({ error: false, data: results, message: 'New Student has been created successfully.' });
+        if (error) {
+            res.send({ error: true, message: error });
+        } else {
+            res.send({ error: false, data: results, message: 'New Student has been created successfully.' });
+        }
     });
 });
 

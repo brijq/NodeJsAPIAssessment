@@ -10,8 +10,11 @@ router.post('/linker', function (req, res) {
   var linker = req.body
 
   sqlConnection.query('INSERT INTO Teachers_Students SET ?', linker, function (error, results, fields) {
-    if (error) throw error;
-    return res.send({ error: false, data: results, message: 'Success' });
+    if (error) {
+      res.send({ error: true, message: error });
+    } else {
+      res.send({ error: false, data: results, message: 'Success' });
+    }
   });
 });
 
@@ -24,8 +27,11 @@ router.post('/api/request', function (req, res) {
   var query = "SELECT T.*, S.* FROM Teachers_Students as T_S JOIN Teachers as T ON T_S.teacherid = T.id JOIN Students as S ON T_S.studentid = S.id WHERE T.email= '" + teachersEmail + "' ";
 
   sqlConnection.query(query, function (error, results, fields) {
-    if (error) throw error;
-    return res.send({ error: false, teacher: teachersEmail, student: results, message: 'Success' });
+    if (error) {
+      res.send({ error: true, message: error });
+    } else {
+      res.send({ error: false, teacher: teachersEmail, student: results, message: 'Success' });
+    }
   });
 });
 
@@ -40,8 +46,11 @@ router.get('/api/commonstudents', function (req, res) {
     console.log(query)
   }
   sqlConnection.query(query, function (error, results, fields) {
-    if (error) throw error;
-    return res.send({ error: false, student: results, message: 'Success' });
+    if (error) {
+      res.send({ error: true, message: error });
+    } else {
+      res.send({ error: false, student: results, message: 'Success' });
+    }
   });
 });
 
@@ -53,18 +62,22 @@ router.post('/api/suspend', function (req, res) {
   // Setting up query
   var query = "SELECT T.*, S.* FROM Teachers_Students as T_S JOIN Teachers as T ON T_S.teacherid = T.id JOIN Students as S ON T_S.studentid = S.id WHERE S.email= '" + studentEmail + "' ";
   var query2 = "UPDATE Students SET suspended = 'Yes' WHERE email = '" + studentEmail + "' ";
-  console.log(query2)
 
+  /* Run the second query as expected code is 204 for success */
   sqlConnection.query(query, function (error, results, fields) {
     res.setHeader('Content-Type', 'application/json');
-    res.statusCode = 204;
-    if (error) throw error;
-    else if (studentEmail === undefined) {
-      response.end();
-    }
-    res.send({ error: false, message: 'Student Successfully Suspended' });
-    sqlConnection.query(query2, function (req, res) {
+    if (error) {
+      res.send({ error: true, message: error });
+    } else {
       res.statusCode = 204;
+    }
+    /* Run the second query as expected code is 204 for success*/
+    sqlConnection.query(query2, function (req, res) {
+      if (error) {
+        res.send({ error: true, message: error });
+      } else {
+        res.statusCode = 204;
+      }
     })
   });
 });
@@ -84,8 +97,11 @@ router.post('/api/retrievefornotifications', function (req, res) {
   var queryToCheckRegisteredWithTeacherandNotSuspended = "SELECT T.*, S.* FROM Teachers_Students as T_S JOIN Teachers as T ON T_S.teacherid = T.id JOIN Students as S ON T_S.studentid = S.id WHERE T.email= '" + teachersEmail + "' AND S.suspended = 'No' AND S.email = '" + extractStart[0] + "' AND '" + extractStart[1] + "'  ";
 
   sqlConnection.query(queryToCheckRegisteredWithTeacherandNotSuspended, function (error, results, fields) {
-    if (error) throw error;
-    res.send({ error: false, students: results });
+    if (error) {
+      res.send({ error: true, message: error });
+    } else {
+      res.send({ error: false, students: results });
+    }
   });
 });
 
